@@ -47,6 +47,60 @@ userModel.find({email:userEmail}, function(error,userData){
     }
 })
 }
+server.post('/addBooks', addBooksFun)
+
+function addBooksFun(req, res) {
+
+    console.log(req.body)
+
+    let { userEmail, name, description, status } = req.body;
+
+    userModel.find({ email: userEmail }, (error, userData) => {
+        if (error) {
+            res.send(error)
+        } else {
+            console.log('before adding', userData)
+            userData[0].book.push({
+                name: name,
+                description: description,
+                status: status
+            })
+            console.log('after adding', userData[0])
+            userData[0].save();
+            res.send(userData[0].book)
+        }
+
+    })
+}
+server.delete('/deleteBooks/:bookId', deleteBook)
+
+function deleteBook(req, res) {
+
+    let index = Number(req.params.bookId);
+
+    let userEmail = req.query.userEmail;
+
+    userModel.find({ email: userEmail }, (error, userData) => {
+
+        if (error) { res.send('cant find user') }
+
+        else {
+
+            console.log('before deleting', userData[0].book)
+
+               let newUserData = userData[0].book.filter((item,idx)=>{
+                   if(idx !== index) {return item}
+                // return idx!==index
+               })
+            // let newUserData = userData[0].book.splice(index, 1);
+            userData[0].book = newUserData
+            console.log('after deleting', userData[0].book)
+            userData[0].save();
+            res.send(userData[0].book)
+        }
+
+    })
+}
 server.listen(PORT, () => {
     console.log(`Listening on PORT ${PORT}`);
 })
