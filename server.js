@@ -3,9 +3,7 @@
 const express = require('express');
 require('dotenv').config();
 const mongoose = require('mongoose');
-
 const cors = require('cors');
-
 const server = express();
 server.use(cors());
 const PORT = process.env.PORT;
@@ -35,7 +33,6 @@ function seedBooksCollection() {
     console.log(bookDb);
     bookDb.save();
 }
-
 //http://localhost:3001/books?email
 server.get('/books', booksFun)
 function booksFun(req, res) {
