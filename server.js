@@ -52,7 +52,6 @@ server.post('/addBooks', addBooksFun)
 function addBooksFun(req, res) {
 
     console.log(req.body)
-
     let { userEmail, name, description, status } = req.body;
 
     userModel.find({ email: userEmail }, (error, userData) => {
